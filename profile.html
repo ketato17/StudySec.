@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StudySec — Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --light-blue: #a7d8ff;
+      --light-yellow: #fff1a8;
+      --light-pink: #ffc6e5;
+      --light-purple: #d6c6ff;
+      --light-red: #ffb3b3;
+
+      --text-dark: #1f2937;
+      --text-dim: #374151;
+      --bg: #fbfbff;
+      --card-shadow: 0 10px 25px rgba(31, 41, 55, 0.12);
+      --ring: 0 0 0 4px rgba(59, 130, 246, 0.25);
+    }
+
+    html, body { height: 100%; }
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-dark);
+      background:
+        radial-gradient(1200px 800px at -10% -10%, var(--light-purple) 0%, transparent 60%),
+        radial-gradient(1000px 700px at 110% -10%, var(--light-pink) 0%, transparent 60%),
+        radial-gradient(900px 600px at -10% 110%, var(--light-yellow) 0%, transparent 60%),
+        radial-gradient(900px 700px at 110% 110%, var(--light-blue) 0%, transparent 60%),
+        var(--bg);
+      background-attachment: fixed;
+    }
+
+    .topbar-wrap { position: sticky; top: 0; z-index: 50; padding: 16px 16px 0 16px; backdrop-filter: saturate(140%) blur(6px); }
+    .topbar { display: flex; align-items: center; justify-content: space-between; border-radius: 14px; padding: 14px 18px; background: linear-gradient(90deg, rgba(214,198,255,0.85) 0%, rgba(255,198,229,0.85) 35%, rgba(255,241,168,0.85) 68%, rgba(167,216,255,0.85) 100%); box-shadow: 0 6px 18px rgba(31,41,55,0.15); }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.3px; color: var(--text-dark); text-decoration: none; }
+    .brand-badge { width: 36px; height: 36px; border-radius: 10px; background: conic-gradient(from 0deg, var(--light-purple), var(--light-pink), var(--light-yellow), var(--light-blue), var(--light-purple)); box-shadow: inset 0 0 0 2px rgba(255,255,255,0.7), 0 6px 14px rgba(31,41,55,0.18); }
+    .brand-name { font-size: 20px; }
+    .nav { display: flex; align-items: center; gap: 14px; }
+    .nav a { text-decoration: none; color: var(--text-dim); font-weight: 600; padding: 10px 14px; border-radius: 10px; transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease; }
+    .nav a:hover { transform: translateY(-1px); background: rgba(255,255,255,0.65); box-shadow: 0 8px 18px rgba(31,41,55,0.12); }
+
+    .container { max-width: 900px; margin: 28px auto 64px; padding: 0 16px; }
+
+    .title { margin: 12px 0 6px 0; font-size: clamp(24px, 4vw, 36px); font-weight: 700; letter-spacing: 0.3px; background: linear-gradient(90deg, #5b21b6, #db2777, #ca8a04, #0369a1); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .subtitle { margin: 0 0 18px 0; color: #374151; opacity: 0.9; }
+
+    .card { background: rgba(255,255,255,0.85); border: 1px solid rgba(17,24,39,0.08); border-radius: 16px; box-shadow: var(--card-shadow); padding: 20px; }
+    .form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form .full { grid-column: 1 / -1; }
+    .form > * { min-width: 0; }
+    label { font-weight: 700; margin-bottom: 6px; display: block; }
+    .input, .textarea, .select { width: 100%; font: inherit; border: 1px solid rgba(17,24,39,0.15); background: rgba(255,255,255,0.95); padding: 10px 12px; border-radius: 12px; }
+    .textarea { min-height: 110px; resize: vertical; }
+    .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px; }
+    .btn { font: inherit; font-weight: 600; border: 1px solid rgba(17,24,39,0.15); background: rgba(255,255,255,0.85); padding: 10px 14px; border-radius: 10px; cursor: pointer; }
+    .btn.primary { background: linear-gradient(90deg, #60a5fa, #a78bfa); color: #fff; border: none; }
+    .btn.danger { color: #b91c1c; border-color: rgba(185,28,28,0.35); }
+    .note { margin-top: 8px; color: #374151; font-size: 14px; }
+    .success { color: #059669; font-weight: 700; }
+
+    a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: none; box-shadow: var(--ring); }
+  </style>
+</head>
+<body>
+  <div class="topbar-wrap">
+    <header class="topbar" role="navigation" aria-label="Top Navigation">
+      <a class="brand" href="home.html">
+        <div class="brand-badge" aria-hidden="true"></div>
+        <div class="brand-name">StudySec</div>
+      </a>
+      <nav class="nav">
+        <a href="home.html">Home</a>
+        <a href="notes.html">Notes</a>
+        <a href="flashcards.html">Flashcards</a>
+        <a href="qa.html">Q&A</a>
+      </nav>
+    </header>
+  </div>
+
+  <main class="container">
+    <h1 class="title">Your Profile</h1>
+    <p class="subtitle">Create your profile to unlock posting in Ask Your Classmates and personalize StudySec.</p>
+
+    <section class="card">
+      <form id="profileForm" class="form" autocomplete="on">
+        <div class="full">
+          <label for="fullName">Full name</label>
+          <input id="fullName" class="input" placeholder="e.g., Alex Johnson" />
+        </div>
+        <div>
+          <label for="school">School</label>
+          <input id="school" class="input" placeholder="e.g., Riverdale High" />
+        </div>
+        <div>
+          <label for="grade">Grade</label>
+          <select id="grade" class="select">
+            <option value="">Select…</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+            <option>11</option>
+            <option>12</option>
+            <option>College</option>
+          </select>
+        </div>
+        <div class="full">
+          <label for="bio">About you</label>
+          <textarea id="bio" class="textarea" placeholder="A few lines about your interests, classes, goals…"></textarea>
+        </div>
+        <div class="actions full">
+          <button id="deleteBtn" class="btn danger" type="button">Delete Profile</button>
+          <button id="saveBtn" class="btn primary" type="submit">Save Profile</button>
+        </div>
+        <div id="status" class="full note"></div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      const PROFILE_DATA_KEY = 'studysec.profile.data';
+      const PROFILE_EXISTS_KEY = 'studysec.profile.exists';
+
+      const form = document.getElementById('profileForm');
+      const fullName = document.getElementById('fullName');
+      const school = document.getElementById('school');
+      const grade = document.getElementById('grade');
+      const bio = document.getElementById('bio');
+      const status = document.getElementById('status');
+      const deleteBtn = document.getElementById('deleteBtn');
+
+      function load(){
+        try {
+          const raw = localStorage.getItem(PROFILE_DATA_KEY);
+          if(!raw) return;
+          const data = JSON.parse(raw);
+          fullName.value = data.fullName || '';
+          school.value = data.school || '';
+          grade.value = data.grade || '';
+          bio.value = data.bio || '';
+        } catch {}
+      }
+
+      function save(e){
+        e.preventDefault();
+        const data = {
+          fullName: fullName.value.trim(),
+          school: school.value.trim(),
+          grade: grade.value,
+          bio: bio.value.trim()
+        };
+        localStorage.setItem(PROFILE_DATA_KEY, JSON.stringify(data));
+        localStorage.setItem(PROFILE_EXISTS_KEY, 'true');
+        status.innerHTML = '<span class="success">Profile saved!</span> You can now post in Ask Your Classmates.';
+      }
+
+      function remove(){
+        if(!confirm('Delete your profile?')) return;
+        localStorage.removeItem(PROFILE_DATA_KEY);
+        localStorage.setItem(PROFILE_EXISTS_KEY, 'false');
+        fullName.value = '';
+        school.value = '';
+        grade.value = '';
+        bio.value = '';
+        status.textContent = 'Profile deleted.';
+      }
+
+      form.addEventListener('submit', save);
+      deleteBtn.addEventListener('click', remove);
+
+      load();
+    })();
+  </script>
+</body>
+</html> 

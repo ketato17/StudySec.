@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StudySec — Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --light-blue: #a7d8ff;
+      --light-yellow: #fff1a8;
+      --light-pink: #ffc6e5;
+      --light-purple: #d6c6ff;
+      --light-red: #ffb3b3;
+
+      --text-dark: #1f2937;
+      --text-dim: #374151;
+      --bg: #fbfbff;
+      --card-shadow: 0 10px 25px rgba(31, 41, 55, 0.12);
+      --ring: 0 0 0 4px rgba(59, 130, 246, 0.25);
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-dark);
+      background:
+        radial-gradient(1200px 800px at -10% -10%, var(--light-purple) 0%, transparent 60%),
+        radial-gradient(1000px 700px at 110% -10%, var(--light-pink) 0%, transparent 60%),
+        radial-gradient(900px 600px at -10% 110%, var(--light-yellow) 0%, transparent 60%),
+        radial-gradient(900px 700px at 110% 110%, var(--light-blue) 0%, transparent 60%),
+        var(--bg);
+      background-attachment: fixed;
+    }
+
+    /* Top navigation bar (shared style) */
+    .topbar-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 16px 16px 0 16px;
+      backdrop-filter: saturate(140%) blur(6px);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 14px;
+      padding: 14px 18px;
+      background: linear-gradient(90deg,
+        rgba(214,198,255,0.85) 0%,
+        rgba(255,198,229,0.85) 35%,
+        rgba(255,241,168,0.85) 68%,
+        rgba(167,216,255,0.85) 100%);
+      box-shadow: 0 6px 18px rgba(31,41,55,0.15);
+    }
+
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.3px; color: var(--text-dark); text-decoration: none; }
+    .brand-badge { width: 36px; height: 36px; border-radius: 10px; background: conic-gradient(from 0deg, var(--light-purple), var(--light-pink), var(--light-yellow), var(--light-blue), var(--light-purple)); box-shadow: inset 0 0 0 2px rgba(255,255,255,0.7), 0 6px 14px rgba(31,41,55,0.18); }
+    .brand-name { font-size: 20px; }
+
+    .nav { display: flex; align-items: center; gap: 14px; }
+    .nav a { text-decoration: none; color: var(--text-dim); font-weight: 600; padding: 10px 14px; border-radius: 10px; transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease; }
+    .nav a:hover { transform: translateY(-1px); background: rgba(255,255,255,0.65); box-shadow: 0 8px 18px rgba(31,41,55,0.12); }
+
+    .container { max-width: 1100px; margin: 28px auto 64px; padding: 0 16px; }
+
+    .title { margin: 12px 0 6px 0; font-size: clamp(24px, 4vw, 36px); font-weight: 700; letter-spacing: 0.3px; background: linear-gradient(90deg, #5b21b6, #db2777, #ca8a04, #0369a1); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .subtitle { margin: 0 0 8px 0; color: #374151; opacity: 0.9; }
+
+    /* Notes grid */
+    .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; margin-top: 18px; }
+    @media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 720px) { .grid { grid-template-columns: repeat(2, 1fr); } .nav a { padding: 8px 10px; } }
+    @media (max-width: 480px) { .grid { grid-template-columns: 1fr; } .brand-name { font-size: 18px; } .brand-badge { width: 32px; height: 32px; } }
+
+    .note-card { position: relative; display: flex; flex-direction: column; min-height: 160px; border-radius: 16px; text-decoration: none; color: #111827; padding: 14px; overflow: hidden; background: white; box-shadow: var(--card-shadow); transition: transform 160ms ease, box-shadow 160ms ease; border: 1px solid rgba(17,24,39,0.06); }
+    .note-card:hover { transform: translateY(-3px); box-shadow: 0 16px 35px rgba(31,41,55,0.18); }
+    .note-card::before { content: ""; position: absolute; inset: -1px; border-radius: 16px; background: var(--accent, var(--light-blue)); opacity: 0.45; z-index: 0; }
+    .note-title { position: relative; z-index: 1; font-weight: 700; font-size: 18px; margin-bottom: 8px; text-shadow: 0 1px 0 rgba(255,255,255,0.9); }
+    .note-preview { position: relative; z-index: 1; font-size: 13px; color: #374151; background: rgba(255,255,255,0.7); border-radius: 10px; padding: 10px; max-height: 76px; overflow: hidden; }
+    /* delete button on card */
+    .note-delete { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border-radius: 999px; border: none; background: rgba(255,255,255,0.92); color: #ef4444; font-weight: 900; cursor: pointer; display: grid; place-items: center; box-shadow: 0 6px 14px rgba(31,41,55,0.15); }
+    .note-delete:hover { background: #ffffff; color: #b91c1c; }
+
+    /* Floating action button */
+    .fab { position: fixed; right: 22px; bottom: 22px; width: 58px; height: 58px; border-radius: 999px; border: none; background: linear-gradient(135deg, #60a5fa, #a78bfa); color: white; font-size: 28px; font-weight: 700; box-shadow: 0 18px 38px rgba(31,41,55,0.25); cursor: pointer; transition: transform 120ms ease, box-shadow 160ms ease; }
+    .fab:hover { transform: translateY(-2px); box-shadow: 0 22px 48px rgba(31,41,55,0.28); }
+    .fab:active { transform: translateY(0); }
+
+    /* Editor modal */
+    .overlay { position: fixed; inset: 0; background: rgba(17,24,39,0.5); backdrop-filter: blur(2px); display: none; z-index: 60; }
+    .modal { position: fixed; inset: 18px; background: #ffffff; border-radius: 18px; box-shadow: 0 30px 80px rgba(0,0,0,0.35); display: none; z-index: 70; overflow: hidden; border: 1px solid rgba(17,24,39,0.08); }
+
+    .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-bottom: 1px solid rgba(17,24,39,0.08); background: linear-gradient(90deg, rgba(214,198,255,0.4), rgba(255,198,229,0.35), rgba(255,241,168,0.35), rgba(167,216,255,0.4)); }
+    .modal-title { display: flex; align-items: center; gap: 10px; }
+    .modal-title input { font: inherit; font-weight: 700; border: none; outline: none; padding: 8px 10px; border-radius: 10px; background: rgba(255,255,255,0.75); }
+
+    .toolbar { display: flex; align-items: center; gap: 10px; }
+    .btn { font: inherit; font-weight: 600; border: 1px solid rgba(17,24,39,0.15); background: rgba(255,255,255,0.8); padding: 8px 12px; border-radius: 10px; cursor: pointer; }
+    .btn:hover { background: rgba(255,255,255,0.95); }
+    .select { font: inherit; border: 1px solid rgba(17,24,39,0.15); background: rgba(255,255,255,0.8); padding: 8px 10px; border-radius: 10px; }
+
+    .modal-body { position: absolute; inset: 58px 12px 12px 12px; border-radius: 14px; overflow: hidden; background: #fff; }
+    .editor-wrap { position: absolute; inset: 0; overflow: auto; background: #fff; }
+    .editor { width: min(1100px, 100%); margin: 0 auto; min-height: 100%; padding: 28px 18px 80px; line-height: 1.6; font-size: 15px; outline: none; }
+
+    /* Templates (backgrounds) */
+    .tpl-blank { background: #fff; }
+
+    .tpl-ruled { /* ruled notebook lines */
+      background-image:
+        linear-gradient(to bottom, rgba(59,130,246,0.18) 1px, transparent 1px);
+      background-size: 100% 28px;
+      background-position: 0 22px;
+    }
+
+    .tpl-grid { /* square grid */
+      background-image:
+        linear-gradient(to right, rgba(31,41,55,0.10) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(31,41,55,0.10) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .tpl-periodic { /* periodic-table-like grid with thicker section lines */
+      background-image:
+        linear-gradient(to right, rgba(31,41,55,0.10) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(31,41,55,0.10) 1px, transparent 1px),
+        linear-gradient(to right, rgba(31,41,55,0.18) 2px, transparent 2px),
+        linear-gradient(to bottom, rgba(31,41,55,0.18) 2px, transparent 2px);
+      background-size:
+        24px 24px,
+        24px 24px,
+        192px 100%,
+        100% 192px;
+      background-position:
+        0 0,
+        0 0,
+        0 0,
+        0 0;
+    }
+
+    /* util */
+    a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible { outline: none; box-shadow: var(--ring); }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="topbar-wrap">
+    <header class="topbar" role="navigation" aria-label="Top Navigation">
+      <a class="brand" href="home.html">
+        <div class="brand-badge" aria-hidden="true"></div>
+        <div class="brand-name">StudySec</div>
+      </a>
+      <nav class="nav">
+        <a href="home.html">Home</a>
+        <a href="profile.html">Profile</a>
+        <a href="signup.html">Sign Up</a>
+        <a href="login.html">Log In</a>
+      </nav>
+    </header>
+  </div>
+
+  <main class="container">
+    <h1 class="title">Your Notes</h1>
+    <p class="subtitle">Create, edit, and organize notes. Click a card to open it. Everything saves automatically.</p>
+
+    <section id="notesGrid" class="grid" aria-label="Notes grid"></section>
+  </main>
+
+  <button id="fab" class="fab" aria-label="Add note" title="Add note">+</button>
+
+  <div id="overlay" class="overlay"></div>
+  <section id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="noteTitleLabel">
+    <div class="modal-head">
+      <div class="modal-title">
+        <span style="font-weight:700;">Title:</span>
+        <input id="noteTitle" type="text" placeholder="Untitled Note" aria-label="Note title" />
+      </div>
+      <div class="toolbar">
+        <label for="templateSelect" style="font-weight:700;">Template</label>
+        <select id="templateSelect" class="select" aria-label="Template selector">
+          <option value="blank">Blank</option>
+          <option value="ruled">Ruled Lines</option>
+          <option value="grid">Grid (Squares)</option>
+          <option value="periodic">Periodic Table</option>
+        </select>
+        <button id="deleteBtn" class="btn" aria-label="Delete note" style="color:#b91c1c;border-color:rgba(185,28,28,0.35);">Delete</button>
+        <button id="closeBtn" class="btn" aria-label="Close">Close</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div id="editorWrap" class="editor-wrap tpl-blank">
+        <div id="editor" class="editor" contenteditable="true" spellcheck="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function() {
+      const STORAGE_KEY = 'studysec.notes.v1';
+
+      /** @typedef {{ id:string, title:string, content:string, template:'blank'|'ruled'|'grid'|'periodic', updatedAt:number }} Note */
+
+      /** @type {Note[]} */
+      let notes = [];
+      let activeId = null;
+      let saveTimer = null;
+
+      const grid = document.getElementById('notesGrid');
+      const fab = document.getElementById('fab');
+      const overlay = document.getElementById('overlay');
+      const modal = document.getElementById('modal');
+      const noteTitle = document.getElementById('noteTitle');
+      const templateSelect = document.getElementById('templateSelect');
+      const editorWrap = document.getElementById('editorWrap');
+      const editor = document.getElementById('editor');
+      const closeBtn = document.getElementById('closeBtn');
+      const deleteBtn = document.getElementById('deleteBtn');
+
+      function uid() {
+        return Math.random().toString(36).slice(2) + Date.now().toString(36);
+      }
+
+      function load() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          notes = raw ? JSON.parse(raw) : [];
+        } catch (_) {
+          notes = [];
+        }
+      }
+
+      function persist() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+      }
+
+      function schedulePersist() {
+        if (saveTimer) clearTimeout(saveTimer);
+        saveTimer = setTimeout(persist, 400);
+      }
+
+      function renderGrid() {
+        grid.innerHTML = '';
+        if (notes.length === 0) {
+          const empty = document.createElement('div');
+          empty.style.gridColumn = '1/-1';
+          empty.style.padding = '18px';
+          empty.style.borderRadius = '14px';
+          empty.style.background = 'rgba(255,255,255,0.7)';
+          empty.style.border = '1px solid rgba(17,24,39,0.08)';
+          empty.style.boxShadow = '0 8px 22px rgba(31,41,55,0.12)';
+          empty.textContent = 'No notes yet. Click the + button to create your first note.';
+          grid.appendChild(empty);
+          return;
+        }
+        notes
+          .slice()
+          .sort((a,b) => b.updatedAt - a.updatedAt)
+          .forEach(n => grid.appendChild(renderCard(n)));
+      }
+
+      function renderCard(n) {
+        const a = document.createElement('a');
+        a.href = '#';
+        a.className = 'note-card';
+        a.style.setProperty('--accent', templateAccent(n.template));
+        a.addEventListener('click', (e) => { e.preventDefault(); openNote(n.id); });
+
+        const title = document.createElement('div');
+        title.className = 'note-title';
+        title.textContent = n.title || 'Untitled Note';
+
+        const preview = document.createElement('div');
+        preview.className = 'note-preview';
+        preview.textContent = n.content ? n.content.replace(/\s+/g, ' ').slice(0, 140) : 'Click to start typing…';
+
+        const del = document.createElement('button');
+        del.className = 'note-delete';
+        del.type = 'button';
+        del.setAttribute('aria-label', 'Delete note');
+        del.title = 'Delete';
+        del.textContent = '×';
+        del.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (!confirm('Delete this note? This cannot be undone.')) return;
+          deleteNote(n.id);
+        });
+
+        a.appendChild(title);
+        a.appendChild(preview);
+        a.appendChild(del);
+        return a;
+      }
+
+      function templateAccent(tpl) {
+        switch (tpl) {
+          case 'ruled': return 'var(--light-yellow)';
+          case 'grid': return 'var(--light-pink)';
+          case 'periodic': return 'var(--light-purple)';
+          default: return 'var(--light-blue)';
+        }
+      }
+
+      function createNote() {
+        const n = { id: uid(), title: 'Untitled Note', content: '', template: 'blank', updatedAt: Date.now() };
+        notes.push(n);
+        persist();
+        renderGrid();
+        openNote(n.id);
+      }
+
+      function openNote(id) {
+        activeId = id;
+        const n = notes.find(x => x.id === id);
+        if (!n) return;
+        noteTitle.value = n.title || '';
+        editor.textContent = n.content || '';
+        templateSelect.value = n.template || 'blank';
+        applyTemplate(n.template || 'blank');
+        showModal(true);
+        editor.focus();
+      }
+
+      function showModal(show) {
+        overlay.style.display = show ? 'block' : 'none';
+        modal.style.display = show ? 'block' : 'none';
+      }
+
+      function applyTemplate(tpl) {
+        editorWrap.classList.remove('tpl-blank','tpl-ruled','tpl-grid','tpl-periodic');
+        editorWrap.classList.add('tpl-' + tpl);
+      }
+
+      function saveActive() {
+        if (!activeId) return;
+        const n = notes.find(x => x.id === activeId);
+        if (!n) return;
+        n.title = noteTitle.value.trim() || 'Untitled Note';
+        n.content = editor.textContent || '';
+        n.template = templateSelect.value;
+        n.updatedAt = Date.now();
+        schedulePersist();
+        // Also update the card list quickly
+        renderGrid();
+      }
+
+      function deleteNote(id) {
+        const idx = notes.findIndex(x => x.id === id);
+        if (idx === -1) return;
+        notes.splice(idx, 1);
+        persist();
+        if (activeId === id) {
+          activeId = null;
+          showModal(false);
+        }
+        renderGrid();
+      }
+
+      // Events
+      fab.addEventListener('click', createNote);
+      overlay.addEventListener('click', () => { saveActive(); showModal(false); activeId = null; });
+      closeBtn.addEventListener('click', () => { saveActive(); showModal(false); activeId = null; });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+          saveActive(); showModal(false); activeId = null;
+        }
+      });
+
+      noteTitle.addEventListener('input', saveActive);
+      templateSelect.addEventListener('change', () => { applyTemplate(templateSelect.value); saveActive(); });
+      editor.addEventListener('input', saveActive);
+      deleteBtn.addEventListener('click', () => {
+        if (!activeId) return;
+        if (!confirm('Delete this note? This cannot be undone.')) return;
+        deleteNote(activeId);
+      });
+
+      window.addEventListener('beforeunload', () => { if (activeId) persist(); });
+
+      // Init
+      load();
+      renderGrid();
+    })();
+  </script>
+</body>
+</html> 

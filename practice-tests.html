@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StudySec — Practice Tests</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --light-blue: #a7d8ff;
+      --light-yellow: #fff1a8;
+      --light-pink: #ffc6e5;
+      --light-purple: #d6c6ff;
+      --light-red: #ffb3b3;
+
+      --text-dark: #1f2937;
+      --text-dim: #374151;
+      --bg: #fbfbff;
+      --card-shadow: 0 10px 25px rgba(31, 41, 55, 0.12);
+      --ring: 0 0 0 4px rgba(59, 130, 246, 0.25);
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-dark);
+      background:
+        radial-gradient(1200px 800px at -10% -10%, var(--light-purple) 0%, transparent 60%),
+        radial-gradient(1000px 700px at 110% -10%, var(--light-pink) 0%, transparent 60%),
+        radial-gradient(900px 600px at -10% 110%, var(--light-yellow) 0%, transparent 60%),
+        radial-gradient(900px 700px at 110% 110%, var(--light-blue) 0%, transparent 60%),
+        var(--bg);
+      background-attachment: fixed;
+    }
+
+    .topbar-wrap { position: sticky; top: 0; z-index: 50; padding: 16px 16px 0 16px; backdrop-filter: saturate(140%) blur(6px); }
+    .topbar { display: flex; align-items: center; justify-content: space-between; border-radius: 14px; padding: 14px 18px; background: linear-gradient(90deg, rgba(214,198,255,0.85) 0%, rgba(255,198,229,0.85) 35%, rgba(255,241,168,0.85) 68%, rgba(167,216,255,0.85) 100%); box-shadow: 0 6px 18px rgba(31,41,55,0.15); }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.3px; color: var(--text-dark); text-decoration: none; }
+    .brand-badge { width: 36px; height: 36px; border-radius: 10px; background: conic-gradient(from 0deg, var(--light-purple), var(--light-pink), var(--light-yellow), var(--light-blue), var(--light-purple)); box-shadow: inset 0 0 0 2px rgba(255,255,255,0.7), 0 6px 14px rgba(31,41,55,0.18); }
+    .brand-name { font-size: 20px; }
+    .nav { display: flex; align-items: center; gap: 14px; }
+    .nav a { text-decoration: none; color: var(--text-dim); font-weight: 600; padding: 10px 14px; border-radius: 10px; transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease; }
+    .nav a:hover { transform: translateY(-1px); background: rgba(255,255,255,0.65); box-shadow: 0 8px 18px rgba(31,41,55,0.12); }
+
+    .container { max-width: 1100px; margin: 28px auto 64px; padding: 0 16px; }
+
+    .title { margin: 12px 0 6px 0; font-size: clamp(24px, 4vw, 36px); font-weight: 700; letter-spacing: 0.3px; background: linear-gradient(90deg, #5b21b6, #db2777, #ca8a04, #0369a1); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .subtitle { margin: 0 0 8px 0; color: #374151; opacity: 0.9; }
+
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 22px; }
+    @media (max-width: 980px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 720px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .grid { grid-template-columns: 1fr; } }
+
+    .card { position: relative; display: flex; align-items: flex-end; min-height: 160px; border-radius: 16px; text-decoration: none; color: #111827; padding: 16px; overflow: hidden; background: white; box-shadow: var(--card-shadow); transition: transform 160ms ease, box-shadow 160ms ease; border: 1px solid rgba(17, 24, 39, 0.06); }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 16px 35px rgba(31,41,55,0.18); }
+    .card::before { content: ""; position: absolute; inset: -1px; border-radius: 16px; background: var(--accent, var(--light-blue)); opacity: 0.5; z-index: 0; }
+    .card > span { position: relative; z-index: 1; font-weight: 700; font-size: 18px; letter-spacing: 0.2px; text-shadow: 0 1px 0 rgba(255,255,255,0.9); }
+
+    .c1 { --accent: var(--light-blue); }
+    .c2 { --accent: var(--light-yellow); }
+    .c3 { --accent: var(--light-pink); }
+    .c4 { --accent: var(--light-purple); }
+    .c5 { --accent: var(--light-red); }
+  </style>
+</head>
+<body>
+  <div class="topbar-wrap">
+    <header class="topbar" role="navigation" aria-label="Top Navigation">
+      <a class="brand" href="home.html">
+        <div class="brand-badge" aria-hidden="true"></div>
+        <div class="brand-name">StudySec</div>
+      </a>
+      <nav class="nav">
+        <a href="home.html">Home</a>
+        <a href="notes.html">Notes</a>
+        <a href="flashcards.html">Flashcards</a>
+        <a href="qa.html">Q&A</a>
+      </nav>
+    </header>
+  </div>
+
+  <main class="container">
+    <h1 class="title">Practice Tests</h1>
+    <p class="subtitle">Choose a category to view links and add your own test links.</p>
+
+    <section class="grid" aria-label="Practice test categories">
+      <a class="card c1" href="sat.html"><span>SAT</span></a>
+      <a class="card c2" href="math-exams.html"><span>Math National Exams</span></a>
+      <a class="card c3" href="georgian-exams.html"><span>Georgian National Exams</span></a>
+      <a class="card c4" href="english-exams.html"><span>English National Exams</span></a>
+      <a class="card c5" href="history-exams.html"><span>History National Exams</span></a>
+      <a class="card c1" href="chemistry-exams.html"><span>Chemistry National Exams</span></a>
+      <a class="card c2" href="biology-exams.html"><span>Biology National Exams</span></a>
+      <a class="card c3" href="geography-exams.html"><span>Geography National Exams</span></a>
+    </section>
+  </main>
+</body>
+</html> 

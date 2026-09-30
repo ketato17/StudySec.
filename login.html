@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StudySec — Log In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --light-blue:#a7d8ff; --light-yellow:#fff1a8; --light-pink:#ffc6e5; --light-purple:#d6c6ff; --text-dark:#1f2937; --text-dim:#374151; --bg:#fbfbff; --card-shadow:0 10px 25px rgba(31,41,55,0.12); --ring:0 0 0 4px rgba(59,130,246,0.25); }
+    html, body { height:100%; }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin:0; font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; color:var(--text-dark); background: radial-gradient(1200px 800px at -10% -10%, var(--light-purple) 0%, transparent 60%), radial-gradient(1000px 700px at 110% -10%, var(--light-pink) 0%, transparent 60%), radial-gradient(900px 600px at -10% 110%, var(--light-yellow) 0%, transparent 60%), radial-gradient(900px 700px at 110% 110%, var(--light-blue) 0%, transparent 60%), var(--bg); background-attachment:fixed; }
+    .topbar-wrap{ position:sticky; top:0; z-index:50; padding:16px 16px 0 16px; backdrop-filter:saturate(140%) blur(6px); }
+    .topbar{ display:flex; align-items:center; justify-content:space-between; border-radius:14px; padding:14px 18px; background:linear-gradient(90deg, rgba(214,198,255,0.85) 0%, rgba(255,198,229,0.85) 35%, rgba(255,241,168,0.85) 68%, rgba(167,216,255,0.85) 100%); box-shadow:0 6px 18px rgba(31,41,55,0.15); }
+    .brand{ display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:0.3px; color:var(--text-dark); text-decoration:none; }
+    .brand-badge{ width:36px; height:36px; border-radius:10px; background:conic-gradient(from 0deg, var(--light-purple), var(--light-pink), var(--light-yellow), var(--light-blue)); box-shadow:inset 0 0 0 2px rgba(255,255,255,0.7), 0 6px 14px rgba(31,41,55,0.18); }
+    .brand-name{ font-size:20px; }
+    .nav{ display:flex; gap:14px; }
+    .nav a{ text-decoration:none; color:var(--text-dim); font-weight:600; padding:10px 14px; border-radius:10px; }
+    .nav a:hover{ background:rgba(255,255,255,0.65); box-shadow:0 8px 18px rgba(31,41,55,0.12); }
+
+    .container{ max-width:600px; margin:28px auto 64px; padding:0 16px; }
+    .title{ margin:12px 0 6px 0; font-size:clamp(24px,4vw,36px); font-weight:700; letter-spacing:0.3px; background:linear-gradient(90deg,#5b21b6,#db2777,#ca8a04,#0369a1); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .subtitle{ margin:0 0 18px 0; color:#374151; opacity:0.9; }
+
+    .card{ background:rgba(255,255,255,0.85); border:1px solid rgba(17,24,39,0.08); border-radius:16px; box-shadow:var(--card-shadow); padding:20px; }
+    .form{ display:grid; grid-template-columns: 1fr; gap:12px; }
+    label{ font-weight:700; margin-bottom:6px; display:block; }
+    .input{ width:100%; font:inherit; border:1px solid rgba(17,24,39,0.15); background:rgba(255,255,255,0.95); padding:10px 12px; border-radius:12px; }
+    .actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:4px; }
+    .btn{ font:inherit; font-weight:600; border:1px solid rgba(17,24,39,0.15); background:rgba(255,255,255,0.85); padding:10px 14px; border-radius:10px; cursor:pointer; }
+    .btn.primary{ background:linear-gradient(90deg,#60a5fa,#a78bfa); color:#fff; border:none; }
+    .success{ color:#059669; font-weight:700; }
+
+    a:focus-visible, button:focus-visible, input:focus-visible { outline:none; box-shadow:var(--ring); }
+  </style>
+</head>
+<body>
+  <div class="topbar-wrap">
+    <header class="topbar" role="navigation" aria-label="Top Navigation">
+      <a class="brand" href="home.html">
+        <div class="brand-badge" aria-hidden="true"></div>
+        <div class="brand-name">StudySec</div>
+      </a>
+      <nav class="nav">
+        <a href="home.html">Home</a>
+        <a href="signup.html">Sign Up</a>
+      </nav>
+    </header>
+  </div>
+
+  <main class="container">
+    <h1 class="title">Log In</h1>
+    <p class="subtitle">Enter your email and name to continue.</p>
+
+    <section class="card">
+      <form id="form" class="form" autocomplete="on">
+        <div>
+          <label for="email">Email</label>
+          <input id="email" class="input" type="email" required placeholder="you@example.com" />
+        </div>
+        <div>
+          <label for="name">Name</label>
+          <input id="name" class="input" required placeholder="Your name" />
+        </div>
+        <div class="actions">
+          <button class="btn primary" type="submit">Log In</button>
+        </div>
+        <div id="status"></div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      const PROFILE_DATA_KEY = 'studysec.profile.data';
+      const PROFILE_EXISTS_KEY = 'studysec.profile.exists';
+      const AUTH_CURRENT_KEY = 'studysec.auth.current';
+
+      const form = document.getElementById('form');
+      const email = document.getElementById('email');
+      const name = document.getElementById('name');
+      const status = document.getElementById('status');
+
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const em = email.value.trim();
+        const nm = name.value.trim();
+        if(!em || !nm){ alert('Please fill both fields.'); return; }
+        localStorage.setItem(AUTH_CURRENT_KEY, JSON.stringify({ email: em, name: nm }));
+        if(localStorage.getItem(PROFILE_EXISTS_KEY) !== 'true'){
+          localStorage.setItem(PROFILE_DATA_KEY, JSON.stringify({ email: em, fullName: nm, school:'', grade:'', bio:'' }));
+          localStorage.setItem(PROFILE_EXISTS_KEY, 'true');
+        }
+        status.innerHTML = '<span class="success">Logged in!</span> Redirecting…';
+        setTimeout(()=>{ window.location.href = 'qa.html'; }, 600);
+      });
+    })();
+
+   
+
+</script>
+
+
+  </script>
+</body>
+</html> 
